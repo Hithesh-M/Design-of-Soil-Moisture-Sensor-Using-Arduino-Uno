@@ -1,0 +1,42 @@
+#include<LiquidCrystal.h> 
+const int rs=12, en=11, d4=5, d5=4, d6=3, d7=2;
+LiquidCrystal lcd (rs, en, d4, d5, d6, d7);
+int Sensor_Pin = A0;
+int sensor_value,moist;
+void setup() 
+{ 
+ analogWrite(6,20);
+ lcd.begin(16,2);
+ lcd.setCursor(0,0);
+ lcd.print("SoilMoisture:");
+ Serial.begin(9600);
+} 
+void loop() 
+{ 
+ sensor_value = analogRead(Sensor_Pin);
+ //Serial.print(sensor_value);
+ moist = map(sensor_value,0,1023,0,100);
+ lcd.setCursor(13,0);
+ lcd.print(moist);
+ lcd.setCursor(15,0);
+ lcd.print("%");
+ Serial.print(moist);
+ Serial.print("%\n");
+ if (sensor_value <300) 
+{ 
+ Serial.print("I am getting Harm too much water is present\n"); //if water is more 
+ lcd.setCursor(0,1);
+ lcd.print("Too Much Water");
+ } 
+ else if(sensor_value >300 && sensor_value < 600){ 
+ Serial.print("No water is Required\n"); //if soil is wet
+ lcd.setCursor(0,1);
+ lcd.print("NO water Require");
+ } 
+ else if (sensor_value >600) 
+{ 
+ Serial.print("Water is Required"); //if soil is dry
+ lcd.setCursor(0,1);
+ lcd.print("Need Water");
+ } 
+}
